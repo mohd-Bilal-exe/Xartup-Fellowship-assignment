@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql" 
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String
+  url         String
+  description String?
+  summary     String?
+  keywords    String?
+  industry    String?
+  stage       String?
+  location    String?
+  founded     String?
+  signals     Signal[]
+  notes       Note[]
+  lists       List[]   @relation("CompanyToLists")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Signal {
+  id        String   @id @default(cuid())
+  label     String
+  value     String
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  content   String
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model List {
+  id        String    @id @default(cuid())
+  name      String
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  companies Company[] @relation("CompanyToLists")
+  createdAt DateTime  @default(now())
+}
+
+model SavedSearch {
+  id        String   @id @default(cuid())
+  name      String?
+  query     String
+  filters   String?  // JSON string
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  password      String
+  name          String?
+  lists         List[]
+  savedSearches SavedSearch[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}

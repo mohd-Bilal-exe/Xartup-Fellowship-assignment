@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Linear",
+    "url": "https://linear.app",
+    "description": "The issue tracking tool you'll enjoy using.",
+    "summary": "Linear helps streamline software projects, sprints, tasks, and bug tracking.",
+    "keywords": "SaaS, Productivity, Project Management",
+    "industry": "Software",
+    "stage": "Series B",
+    "location": "San Francisco, CA"
+  },
+  {
+    "name": "Vercel",
+    "url": "https://vercel.com",
+    "description": "Develop. Preview. Ship. For the best frontend teams.",
+    "summary": "Vercel provides the infrastructure and tools to build and deploy high-performance web applications.",
+    "keywords": "Infrastructure, Hosting, Next.js",
+    "industry": "DevTools",
+    "stage": "Series E",
+    "location": "San Francisco, CA"
+  },
+  {
+    "name": "Supabase",
+    "url": "https://supabase.com",
+    "description": "The Open Source Firebase Alternative.",
+    "summary": "Supabase is a Backend-as-a-Service that provides a database, authentication, and more.",
+    "keywords": "Database, BaaS, Open Source",
+    "industry": "Infrastructure",
+    "stage": "Series B",
+    "location": "Singapore"
+  },
+  {
+    "name": "Perplexity",
+    "url": "https://perplexity.ai",
+    "description": "Where knowledge begins.",
+    "summary": "Perplexity is an AI-powered search engine that provides direct answers to questions.",
+    "keywords": "AI, Search, LLM",
+    "industry": "AI",
+    "stage": "Series C",
+    "location": "San Francisco, CA"
+  },
+  {
+    "name": "Attio",
+    "url": "https://attio.com",
+    "description": "The CRM for the next generation of software.",
+    "summary": "Attio is a data-driven CRM that helps teams manage their relationships at scale.",
+    "keywords": "SaaS, CRM, Sales",
+    "industry": "Software",
+    "stage": "Series B",
+    "location": "London, UK"
+  }
+]
