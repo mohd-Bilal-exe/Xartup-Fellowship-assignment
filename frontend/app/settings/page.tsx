@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/useAuthStore';
 import { authService } from '@/services/api';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 export default function SettingsPage() {
     const { user, loading, updateUser } = useAuthStore();
@@ -64,10 +65,10 @@ export default function SettingsPage() {
                 email: profile.email
             });
             updateUser(data);
-            alert('Profile updated successfully!');
+            toast.success('Profile updated successfully!');
         } catch (error: any) {
             console.error('Failed to update profile:', error);
-            alert(error.response?.data?.error || 'Failed to update profile');
+            toast.error(error.response?.data?.error || 'Failed to update profile');
         } finally {
             setSaving(false);
         }

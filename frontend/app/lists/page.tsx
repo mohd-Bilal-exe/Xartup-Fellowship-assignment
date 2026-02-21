@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { listService } from '@/services/api';
 import Link from 'next/link';
 import Modal from '@/components/Modal';
+import { toast } from 'react-toastify';
 
 function ClientOnlyDate({ date }: { date: string }) {
     const [mounted, setMounted] = useState(false);
@@ -56,8 +57,10 @@ export default function ListsPage() {
             setIsCreateModalOpen(false);
             setNewListName('');
             fetchLists();
+            toast.success('List created successfully!');
         } catch (error) {
             console.error('Failed to create list:', error);
+            toast.error('Failed to create list');
         }
     };
 
@@ -67,8 +70,10 @@ export default function ListsPage() {
             await listService.deleteList(deleteId);
             setDeleteId(null);
             fetchLists();
+            toast.success('List deleted successfully!');
         } catch (error) {
             console.error('Failed to delete list:', error);
+            toast.error('Failed to delete list');
         }
     };
 
@@ -86,6 +91,7 @@ export default function ListsPage() {
         document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
+        toast.info(`Exported ${list.name} as JSON`);
     };
 
     return (

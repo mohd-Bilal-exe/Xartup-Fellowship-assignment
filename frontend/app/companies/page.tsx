@@ -13,6 +13,7 @@ import { companyService, listService, savedSearchService } from '@/services/api'
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Modal from '@/components/Modal';
+import { toast } from 'react-toastify';
 
 function DiscoveryContent() {
     const searchParams = useSearchParams();
@@ -26,8 +27,6 @@ function DiscoveryContent() {
     const [sortBy, setSortBy] = useState('name');
     const [sortOrder, setSortOrder] = useState('asc');
     const [lists, setLists] = useState<any[]>([]);
-
-    // Modal State
     const [isSaveSearchModalOpen, setIsSaveSearchModalOpen] = useState(false);
     const [saveSearchName, setSaveSearchName] = useState('');
     const [isAddToListModalOpen, setIsAddToListModalOpen] = useState(false);
@@ -40,7 +39,6 @@ function DiscoveryContent() {
         setIndustry(searchParams.get('industry') || '');
         setStage(searchParams.get('stage') || '');
     }, [searchParams]);
-
     const fetchCompanies = async () => {
         setLoading(true);
         try {
@@ -62,7 +60,6 @@ function DiscoveryContent() {
             setLoading(false);
         }
     };
-
     const fetchLists = async () => {
         try {
             const { data } = await listService.getLists();
@@ -71,18 +68,15 @@ function DiscoveryContent() {
             console.error('Failed to fetch lists:', error);
         }
     };
-
     useEffect(() => {
         const timer = setTimeout(() => {
             fetchCompanies();
         }, 300);
         return () => clearTimeout(timer);
     }, [search, industry, stage, page, sortBy, sortOrder]);
-
     useEffect(() => {
         fetchLists();
     }, []);
-
     const handleSaveSearch = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!saveSearchName) return;
@@ -92,12 +86,12 @@ function DiscoveryContent() {
             await savedSearchService.saveSearch(saveSearchName, search, filters);
             setIsSaveSearchModalOpen(false);
             setSaveSearchName('');
-            // Optional: Show success toast
+            toast.success('Search saved successfully!');
         } catch (error) {
             console.error('Failed to save search:', error);
+            toast.error('Failed to save search');
         }
     };
-
     const handleCreateListAndAdd = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newListName || !selectedCompanyId) return;
@@ -109,22 +103,23 @@ function DiscoveryContent() {
             setNewListName('');
             setIsCreatingList(false);
             fetchLists();
+            toast.success('List created and company added!');
         } catch (error) {
             console.error('Failed to create list and add company:', error);
+            toast.error('Failed to create list');
         }
     };
-
     const handleAddToList = async (listId: string) => {
         if (!selectedCompanyId) return;
         try {
             await listService.addToList(listId, selectedCompanyId);
             setIsAddToListModalOpen(false);
+            toast.success('Company added to list!');
         } catch (error) {
             console.error('Failed to add to list:', error);
+            toast.error('Failed to add to list');
         }
     };
-
-
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex flex-col gap-2">
@@ -163,11 +158,9 @@ function DiscoveryContent() {
                     onChange={(e) => setStage(e.target.value)}
                 >
                     <option value="">All Stages</option>
-                    <option value="Seed">Seed</option>
-                    <option value="Series A">Series A</option>
-                    <option value="Series B">Series B</option>
-                    <option value="Series C">Series C</option>
-                    <option value="Late Stage">Late Stage</option>
+                    <option value="public">Public</option>
+                    <option value="subsidiary">Subsidiary</option>
+                    <option value="private">Private</option>
                 </select>
 
                 <button

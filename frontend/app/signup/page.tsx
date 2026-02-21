@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import AppIcon from '@/components/Appicon';
+import { toast } from 'react-toastify';
 
 export default function SignupPage() {
     const { login } = useAuthStore();
@@ -34,9 +35,11 @@ export default function SignupPage() {
         try {
             const res = await authService.signup({ name, email, password });
             login(res.data.token, res.data.user);
+            toast.success('Account created successfully! Welcome to Xartup.');
             router.push('/companies');
         } catch (err: any) {
             setError(err.response?.data?.error || 'Failed to sign up');
+            toast.error(err.response?.data?.error || 'Failed to sign up');
         } finally {
             setLoading(false);
         }

@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import AppIcon from '@/components/Appicon';
+import { toast } from 'react-toastify';
 
 export default function LoginPage() {
     const { login } = useAuthStore();
@@ -32,9 +33,11 @@ export default function LoginPage() {
             console.log(email, password);
             const res = await authService.login({ email, password });
             login(res.data.token, res.data.user);
+            toast.success('Signed in successfully!');
             router.push('/companies');
         } catch (err: any) {
             setError(err.response?.data?.error || 'Invalid email or password');
+            toast.error(err.response?.data?.error || 'Invalid email or password');
         } finally {
             setLoading(false);
         }

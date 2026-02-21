@@ -18,6 +18,7 @@ import {
 import { companyService, listService } from '@/services/api';
 import { cn } from '@/lib/utils';
 import Modal from '@/components/Modal';
+import { toast } from 'react-toastify';
 
 export default function CompanyProfilePage() {
     const { id } = useParams();
@@ -67,9 +68,10 @@ export default function CompanyProfilePage() {
         try {
             const { data } = await companyService.enrichCompany(id as string);
             setCompany(data);
+            toast.success('Profile enriched successfully!');
         } catch (error: any) {
             console.error('Enrichment failed:', error.response?.data?.error);
-            alert(error.response?.data?.error || 'Enrichment failed. Please check backend logs.');
+            toast.error(error.response?.data?.error || 'Enrichment failed. Please check backend logs.');
         } finally {
             setEnriching(false);
         }
@@ -86,8 +88,10 @@ export default function CompanyProfilePage() {
             });
             setIsAddNoteModalOpen(false);
             setNoteContent('');
+            toast.success('Note added successfully!');
         } catch (error) {
             console.error('Failed to add note:', error);
+            toast.error('Failed to add note');
         }
     };
 
@@ -95,9 +99,10 @@ export default function CompanyProfilePage() {
         try {
             await listService.addToList(listId, id as string);
             setIsAddToListModalOpen(false);
-            // Optional: toast success
+            toast.success('Company added to list!');
         } catch (error) {
             console.error('Failed to add to list:', error);
+            toast.error('Failed to add to list');
         }
     };
 
@@ -111,8 +116,10 @@ export default function CompanyProfilePage() {
             setNewListName('');
             setIsCreatingList(false);
             fetchLists();
+            toast.success('List created and company added!');
         } catch (error) {
             console.error('Failed to create list and add:', error);
+            toast.error('Failed to create list');
         }
     };
 

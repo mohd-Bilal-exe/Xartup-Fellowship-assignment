@@ -5,6 +5,8 @@ import { SidebarProvider, useSidebar } from "./SidebarContext";
 import { useAuthStore } from "@/store/useAuthStore";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from 'next/navigation';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function MainContent({ children }: { children: React.ReactNode }) {
     const { isCollapsed } = useSidebar();
@@ -46,6 +48,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <SidebarProvider>
             <SidebarWrapper />
             <MainContent>{children}</MainContent>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
         </SidebarProvider>
     );
 }

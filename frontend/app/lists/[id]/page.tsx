@@ -12,6 +12,7 @@ import {
 import { listService } from '@/services/api';
 import Link from 'next/link';
 import Modal from '@/components/Modal';
+import { toast } from 'react-toastify';
 
 export default function ListDetailPage() {
     const { id } = useParams();
@@ -43,8 +44,10 @@ export default function ListDetailPage() {
             await listService.removeFromList(id as string, removingCompanyId);
             setRemovingCompanyId(null);
             fetchListDetails();
+            toast.success('Company removed from list');
         } catch (error) {
             console.error('Failed to remove company from list:', error);
+            toast.error('Failed to remove company');
         }
     };
 

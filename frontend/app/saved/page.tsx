@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { savedSearchService } from '@/services/api';
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/Modal';
+import { toast } from 'react-toastify';
 
 export default function SavedSearchesPage() {
     const [savedSearches, setSavedSearches] = React.useState<any[]>([]);
@@ -44,8 +45,10 @@ export default function SavedSearchesPage() {
             await savedSearchService.deleteSavedSearch(deleteId);
             setDeleteId(null);
             fetchSearches();
+            toast.success('Search deleted successfully');
         } catch (error) {
             console.error('Failed to delete search:', error);
+            toast.error('Failed to delete search');
         }
     };
 
