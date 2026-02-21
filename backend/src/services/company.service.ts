@@ -79,7 +79,7 @@ export const enrichCompany = async (id: string) => {
   // 2. Extract using Gemini
   console.log('Starting Gemini AI extraction...');
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     const prompt = `
       Extract information from the following markdown content of a company website.
       Provide the result in valid JSON format with parameters:

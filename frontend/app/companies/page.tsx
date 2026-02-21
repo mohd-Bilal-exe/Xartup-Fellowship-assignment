@@ -10,7 +10,6 @@ import {
     History
 } from 'lucide-react';
 import { companyService, listService, savedSearchService } from '@/services/api';
-
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Modal from '@/components/Modal';
