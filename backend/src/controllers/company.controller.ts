@@ -21,7 +21,7 @@ export const getCompanies = async (req: Request, res: Response) => {
 
 export const getCompanyById = async (req: Request, res: Response) => {
   try {
-    const company = await CompanyService.getCompanyById(req.params.id);
+    const company = await CompanyService.getCompanyById(req.params.id as string);
     if (!company) return res.status(404).json({ error: 'Company not found' });
     res.json(company);
   } catch (error: any) {
@@ -31,8 +31,19 @@ export const getCompanyById = async (req: Request, res: Response) => {
 
 export const enrichCompany = async (req: Request, res: Response) => {
   try {
-    const updatedCompany = await CompanyService.enrichCompany(req.params.id);
+    console.log(req.params.id);
+    const updatedCompany = await CompanyService.enrichCompany(req.params.id as string);
     res.json(updatedCompany);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const addNote = async (req: Request, res: Response) => {
+  try {
+    const { content } = req.body;
+    const note = await CompanyService.addNote(req.params.id as string, content);
+    res.json(note);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

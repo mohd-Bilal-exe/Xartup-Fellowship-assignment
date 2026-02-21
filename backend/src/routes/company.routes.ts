@@ -10,5 +10,6 @@ router.use(authenticate);
 router.get('/', CompanyController.getCompanies);
 router.get('/:id', CompanyController.getCompanyById);
 router.post('/:id/enrich', CompanyController.enrichCompany);
+router.post('/:id/notes', CompanyController.addNote);
 
 export default router;

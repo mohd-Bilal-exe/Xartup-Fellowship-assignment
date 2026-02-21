@@ -72,6 +72,22 @@ export default function ListsPage() {
         }
     };
 
+    const handleExport = (list: any) => {
+        const exportData = {
+            listName: list.name,
+            exportedAt: new Date().toISOString(),
+            companyCount: list.companies?.length || 0,
+            companies: list.companies || []
+        };
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", `${list.name.replace(/\s+/g, '_')}_export.json`);
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    };
+
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex items-center justify-between">
@@ -123,7 +139,11 @@ export default function ListsPage() {
                                     <ClientOnlyDate date={list.createdAt} />
                                 </span>
                                 <div className="flex items-center gap-2">
-                                    <button className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-white transition-colors" title="Export">
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); handleExport(list); }}
+                                        className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-white transition-colors"
+                                        title="Export as JSON"
+                                    >
                                         <Download className="w-4 h-4" />
                                     </button>
                                     <Link href={`/lists/${list.id}`} className="p-2 rounded-lg hover:bg-primary/10 text-primary transition-colors">

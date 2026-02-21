@@ -12,11 +12,12 @@ import {
     Loader2,
     CheckCircle2,
     AlertCircle,
-    MessageSquare
+    MessageSquare,
+    Plus
 } from 'lucide-react';
-import { companyService } from '@/services/api';
+import { companyService, listService } from '@/services/api';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
+import Modal from '@/components/Modal';
 
 export default function CompanyProfilePage() {
     const { id } = useParams();
@@ -25,6 +26,15 @@ export default function CompanyProfilePage() {
     const [loading, setLoading] = useState(true);
     const [enriching, setEnriching] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [lists, setLists] = useState<any[]>([]);
+
+    // Interaction State
+    const [isAddNoteModalOpen, setIsAddNoteModalOpen] = useState(false);
+    const [noteContent, setNoteContent] = useState('');
+    const [isAddToListModalOpen, setIsAddToListModalOpen] = useState(false);
+    const [selectedListId, setSelectedListId] = useState('');
+    const [isCreatingList, setIsCreatingList] = useState(false);
+    const [newListName, setNewListName] = useState('');
 
     const fetchCompany = async () => {
         setLoading(true);
@@ -39,8 +49,18 @@ export default function CompanyProfilePage() {
         }
     };
 
+    const fetchLists = async () => {
+        try {
+            const { data } = await listService.getLists();
+            setLists(data);
+        } catch (error) {
+            console.error('Failed to fetch lists:', error);
+        }
+    };
+
     useEffect(() => {
         fetchCompany();
+        fetchLists();
     }, [id]);
 
     const handleEnrich = async () => {
@@ -53,6 +73,47 @@ export default function CompanyProfilePage() {
             alert(error.response?.data?.error || 'Enrichment failed. Please check backend logs.');
         } finally {
             setEnriching(false);
+        }
+    };
+
+    const handleAddNote = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!noteContent) return;
+        try {
+            const { data } = await companyService.addNote(id as string, noteContent);
+            setCompany({
+                ...company,
+                notes: [...(company.notes || []), data]
+            });
+            setIsAddNoteModalOpen(false);
+            setNoteContent('');
+        } catch (error) {
+            console.error('Failed to add note:', error);
+        }
+    };
+
+    const handleAddToList = async (listId: string) => {
+        try {
+            await listService.addToList(listId, id as string);
+            setIsAddToListModalOpen(false);
+            // Optional: toast success
+        } catch (error) {
+            console.error('Failed to add to list:', error);
+        }
+    };
+
+    const handleCreateListAndAdd = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newListName) return;
+        try {
+            const { data: newList } = await listService.createList(newListName);
+            await listService.addToList(newList.id, id as string);
+            setIsAddToListModalOpen(false);
+            setNewListName('');
+            setIsCreatingList(false);
+            fetchLists();
+        } catch (error) {
+            console.error('Failed to create list and add:', error);
         }
     };
 
@@ -83,26 +144,42 @@ export default function CompanyProfilePage() {
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header */}
             <div className="flex items-center justify-between">
-                <button
-                    onClick={() => router.back()}
-                    className="flex items-center gap-2 text-muted-foreground hover:text-white transition-colors"
-                >
-                    <ArrowLeft className="w-4 h-4" />
-                    Back to Discovery
-                </button>
-
-                <button
-                    onClick={handleEnrich}
-                    disabled={enriching}
-                    className={cn(
-                        "flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold transition-all shadow-lg",
-                        "bg-primary text-white hover:bg-primary/90 shadow-primary/20",
-                        enriching && "opacity-50 cursor-not-allowed"
+                <div className="flex flex-col gap-1">
+                    <button
+                        onClick={() => router.back()}
+                        className="flex items-center gap-2 text-muted-foreground hover:text-white transition-colors text-sm mb-1"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        Back to Discovery
+                    </button>
+                    {company.lastEnrichedAt && (
+                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3 text-primary" />
+                            AI-Enriched on {new Date(company.lastEnrichedAt).toLocaleDateString()}
+                        </span>
                     )}
-                >
-                    {enriching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4 fill-white" />}
-                    {enriching ? 'Enriching with AI...' : 'Enrich This Profile'}
-                </button>
+                </div>
+                <div className="flex gap-2">
+                    <button
+                        onClick={handleEnrich}
+                        disabled={enriching}
+                        className={cn(
+                            "flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold transition-all shadow-lg",
+                            "bg-primary text-white hover:bg-primary/90 shadow-primary/20",
+                            enriching && "opacity-50 cursor-not-allowed"
+                        )}
+                    >
+                        {enriching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4 fill-white" />}
+                        {enriching ? 'Enriching with AI...' : 'Enrich This Profile'}
+                    </button>
+
+                    <button
+                        onClick={() => setIsAddToListModalOpen(true)}
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold bg-secondary text-white hover:bg-white/10 transition-all border border-white/5"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Save to List
+                    </button></div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -203,7 +280,12 @@ export default function CompanyProfilePage() {
                     <div className="glass p-6 rounded-3xl border border-border/50">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-bold">Notes</h3>
-                            <button className="text-xs text-primary hover:underline">Add Note</button>
+                            <button
+                                onClick={() => setIsAddNoteModalOpen(true)}
+                                className="text-xs text-primary hover:underline"
+                            >
+                                Add Note
+                            </button>
                         </div>
                         <div className="space-y-4">
                             {company.notes?.length > 0 ? (
@@ -217,8 +299,132 @@ export default function CompanyProfilePage() {
                             )}
                         </div>
                     </div>
+
+                    {company.sources && company.sources.length > 0 && (
+                        <div className="glass p-6 rounded-3xl border border-border/50">
+                            <h3 className="text-lg font-bold mb-4">Data Sources</h3>
+                            <div className="space-y-4">
+                                {company.sources.map((source: any) => (
+                                    <div key={source.id} className="space-y-1">
+                                        <p className="text-xs text-primary truncate hover:text-primary transition-colors cursor-default" title={source.url}>
+                                            {source.url}
+                                        </p>
+                                        <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                                            <Calendar className="w-3 h-3" />
+                                            Scraped: {new Date(source.createdAt).toLocaleString()}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
+
+            {/* Modals */}
+            <Modal
+                isOpen={isAddNoteModalOpen}
+                onClose={() => setIsAddNoteModalOpen(false)}
+                title="Add Note"
+            >
+                <form onSubmit={handleAddNote} className="space-y-4">
+                    <textarea
+                        required
+                        autoFocus
+                        placeholder="Write your observation here..."
+                        className="w-full h-32 px-4 py-3 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none"
+                        value={noteContent}
+                        onChange={(e) => setNoteContent(e.target.value)}
+                    />
+                    <button
+                        type="submit"
+                        className="w-full py-4 bg-primary text-black rounded-2xl font-black text-lg hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    >
+                        Save Note
+                    </button>
+                </form>
+            </Modal>
+
+            <Modal
+                isOpen={isAddToListModalOpen}
+                onClose={() => {
+                    setIsAddToListModalOpen(false);
+                    setIsCreatingList(false);
+                }}
+                title="Save to List"
+            >
+                <div className="space-y-6">
+                    {!isCreatingList ? (
+                        <>
+                            <div className="space-y-3">
+                                <label className="text-sm font-bold text-muted-foreground uppercase">Select Destination List</label>
+                                <div className="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                                    {lists.map((list) => (
+                                        <button
+                                            key={list.id}
+                                            onClick={() => handleAddToList(list.id)}
+                                            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary/50 hover:bg-primary/10 transition-all text-left flex items-center justify-between group"
+                                        >
+                                            <span className="font-bold">{list.name}</span>
+                                            <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors">
+                                                {list._count?.companies || 0} companies
+                                            </span>
+                                        </button>
+                                    ))}
+                                    {lists.length === 0 && (
+                                        <p className="text-center py-4 text-muted-foreground text-sm italic">You don't have any lists yet.</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="relative">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t border-border" />
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase">
+                                    <span className="bg-background px-2 text-muted-foreground">Or</span>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setIsCreatingList(true)}
+                                className="w-full py-3 rounded-xl border border-dashed border-border hover:border-primary hover:text-primary transition-all font-bold flex items-center justify-center gap-2"
+                            >
+                                <Plus className="w-4 h-4" />
+                                Create New List
+                            </button>
+                        </>
+                    ) : (
+                        <form onSubmit={handleCreateListAndAdd} className="space-y-4">
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-muted-foreground uppercase">New List Name</label>
+                                <input
+                                    type="text"
+                                    required
+                                    autoFocus
+                                    placeholder="e.g. My Favorites"
+                                    className="w-full px-4 py-3 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                    value={newListName}
+                                    onChange={(e) => setNewListName(e.target.value)}
+                                />
+                            </div>
+                            <div className="flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsCreatingList(false)}
+                                    className="flex-1 py-3 bg-secondary text-secondary-foreground rounded-xl font-bold hover:bg-secondary/80 transition-all"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-[2] py-3 bg-primary text-black rounded-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                >
+                                    Create & Save
+                                </button>
+                            </div>
+                        </form>
+                    )}
+                </div>
+            </Modal>
         </div>
     );
 }

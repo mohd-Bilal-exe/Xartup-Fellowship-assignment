@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" 
+  provider = "postgresql"
 }
 
 model Company {
@@ -18,11 +18,21 @@ model Company {
   stage       String?
   location    String?
   founded     String?
+  lastEnrichedAt DateTime?
+  sources        Source[]
   signals     Signal[]
   notes       Note[]
   lists       List[]   @relation("CompanyToLists")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Source {
+  id        String   @id @default(cuid())
+  url       String
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 model Signal {

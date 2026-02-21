@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
     Compass,
     LayoutList,
@@ -10,7 +10,8 @@ import {
     Settings,
     ChevronLeft,
     ChevronRight,
-    Zap
+    Zap,
+    Search
 } from 'lucide-react';
 import { LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -29,6 +30,7 @@ export default function Sidebar() {
     const { isCollapsed, toggle } = useSidebar();
     const { user, logout } = useAuth();
     const pathname = usePathname();
+    const router = useRouter();
 
     return (
         <motion.aside
@@ -57,6 +59,25 @@ export default function Sidebar() {
                         <Zap className="w-5 h-5 text-white fill-white" />
                     </div>
                 )}
+            </div>
+
+            <div className="px-4 py-2 mb-2">
+                <div className="relative group">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    <input
+                        type="text"
+                        placeholder={isCollapsed ? "" : "Global search..."}
+                        className={cn(
+                            "w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-9 pr-4 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all",
+                            isCollapsed && "cursor-pointer"
+                        )}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                router.push(`/companies?q=${e.currentTarget.value}`);
+                            }
+                        }}
+                    />
+                </div>
             </div>
 
             <nav className="flex-1 px-4 py-4 space-y-2">

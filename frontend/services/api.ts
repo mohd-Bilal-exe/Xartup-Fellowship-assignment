@@ -23,6 +23,7 @@ export const companyService = {
   getCompanies: (params: any) => api.get('/companies', { params }),
   getCompany: (id: string) => api.get(`/companies/${id}`),
   enrichCompany: (id: string) => api.post(`/companies/${id}/enrich`),
+  addNote: (id: string, content: string) => api.post(`/companies/${id}/notes`, { content }),
 };
 
 export const listService = {
