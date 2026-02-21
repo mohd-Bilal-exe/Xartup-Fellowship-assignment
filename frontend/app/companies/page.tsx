@@ -1,10 +1,7 @@
 'use client';
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import {
     Search,
-    Filter,
-    ArrowUpDown,
     ExternalLink,
     Plus,
     Loader2,
@@ -18,7 +15,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Modal from '@/components/Modal';
 
-export default function DiscoveryPage() {
+function DiscoveryContent() {
     const searchParams = useSearchParams();
     const [companies, setCompanies] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -397,5 +394,17 @@ export default function DiscoveryPage() {
                 </div>
             </Modal>
         </div >
+    );
+}
+
+export default function DiscoveryPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center min-h-[400px]">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        }>
+            <DiscoveryContent />
+        </Suspense>
     );
 }

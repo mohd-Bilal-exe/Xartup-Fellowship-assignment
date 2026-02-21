@@ -32,7 +32,6 @@ export default function CompanyProfilePage() {
     const [isAddNoteModalOpen, setIsAddNoteModalOpen] = useState(false);
     const [noteContent, setNoteContent] = useState('');
     const [isAddToListModalOpen, setIsAddToListModalOpen] = useState(false);
-    const [selectedListId, setSelectedListId] = useState('');
     const [isCreatingList, setIsCreatingList] = useState(false);
     const [newListName, setNewListName] = useState('');
 
