@@ -69,7 +69,7 @@ export default function CompanyProfilePage() {
             const { data } = await companyService.enrichCompany(id as string);
             setCompany(data);
         } catch (error: any) {
-            console.error('Enrichment failed:', error);
+            console.error('Enrichment failed:', error.response?.data?.error);
             alert(error.response?.data?.error || 'Enrichment failed. Please check backend logs.');
         } finally {
             setEnriching(false);

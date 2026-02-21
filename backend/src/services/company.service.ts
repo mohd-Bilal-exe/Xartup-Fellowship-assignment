@@ -128,7 +128,12 @@ export const enrichCompany = async (id: string) => {
         },
         signals: {
           deleteMany: {},
-          create: (extractedData.signals || []).map((s: any) => ({ label: s.label, value: s.value }))
+          create: (extractedData.signals || [])
+            .filter((s: any) => s.label && s.value) // Only save signals with both label and value
+            .map((s: any) => ({ 
+              label: String(s.label), 
+              value: String(s.value) 
+            }))
         }
       },
       include: { signals: true, sources: true, notes: true }
