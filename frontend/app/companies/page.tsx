@@ -139,14 +139,14 @@ function DiscoveryContent() {
                     <input
                         type="text"
                         placeholder="Search companies by name, keywords..."
-                        className="w-full pl-10 pr-4 py-2.5 bg-card border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                        className="w-full pl-10 pr-4 py-2.5 bg-card border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-foreground transition-all"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
                 </div>
 
                 <select
-                    className="px-4 py-2.5 bg-card border border-border rounded-xl focus:ring-2 focus:ring-primary/20 outline-none"
+                    className="px-4 py-2.5 bg-card border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none"
                     value={industry}
                     onChange={(e) => setIndustry(e.target.value)}
                 >
@@ -159,7 +159,7 @@ function DiscoveryContent() {
                 </select>
 
                 <select
-                    className="px-4 py-2.5 bg-card border border-border rounded-xl focus:ring-2 focus:ring-primary/20 outline-none"
+                    className="px-4 py-2.5 bg-card border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none"
                     value={stage}
                     onChange={(e) => setStage(e.target.value)}
                 >
@@ -176,17 +176,17 @@ function DiscoveryContent() {
                         setSaveSearchName(search || 'My Search');
                         setIsSaveSearchModalOpen(true);
                     }}
-                    className="px-4 py-2.5 bg-secondary text-secondary-foreground rounded-xl hover:bg-primary hover:text-white transition-all flex items-center gap-2 font-medium"
+                    className="px-4 py-2.5 bg-secondary text-foreground rounded-xl hover:bg-primary hover:text-white transition-all flex items-center gap-2 font-medium border border-border"
                 >
                     <History className="w-4 h-4" />
                     Save Search
                 </button>
             </div>
 
-            <div className="glass rounded-2xl border border-border/50  overflow-hidden">
+            <div className="glass rounded-2xl border border-border overflow-hidden">
                 <table className="w-full text-left">
                     <thead>
-                        <tr className="border-b border-border/50 bg-white/5">
+                        <tr className="border-b border-border bg-secondary/50">
                             <th className="px-6 py-4 font-medium text-muted-foreground">Company</th>
                             <th className="px-6 py-4 font-medium text-muted-foreground">Industry</th>
                             <th className="px-6 py-4 font-medium text-muted-foreground">Stage</th>
@@ -194,21 +194,21 @@ function DiscoveryContent() {
                             <th className="px-6 py-4 font-medium text-muted-foreground text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-border/50">
+                    <tbody className="divide-y divide-border">
                         {loading ? (
                             Array.from({ length: 5 }).map((_, i) => (
                                 <tr key={i} className="animate-pulse">
                                     <td colSpan={5} className="px-6 py-8">
-                                        <div className="h-4 bg-white/10 rounded w-full" />
+                                        <div className="h-4 bg-muted rounded w-full" />
                                     </td>
                                 </tr>
                             ))
                         ) : companies ? (
                             companies.map((company: any) => (
-                                <tr key={company.id} className="hover:bg-white/5 transition-colors group">
+                                <tr key={company.id} className="hover:bg-primary/5 transition-colors group">
                                     <td className="px-6 py-4">
                                         <div className="flex flex-col">
-                                            <span className="font-semibold">{company.name}</span>
+                                            <span className="font-semibold text-foreground">{company.name}</span>
                                             <span className="text-xs text-muted-foreground flex items-center gap-1">
                                                 {company.url} <ExternalLink className="w-3 h-3" />
                                             </span>
@@ -219,7 +219,7 @@ function DiscoveryContent() {
                                             {company.industry || 'N/A'}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-sm font-medium">{company.stage || 'N/A'}</td>
+                                    <td className="px-6 py-4 text-sm font-medium text-foreground">{company.stage || 'N/A'}</td>
                                     <td className="px-6 py-4 text-sm text-muted-foreground">{company.location || 'Unknown'}</td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
@@ -254,7 +254,7 @@ function DiscoveryContent() {
                 </table>
 
                 {/* Pagination */}
-                <div className="px-6 py-4 border-t border-border/50 flex items-center justify-between">
+                <div className="px-6 py-4 border-t border-border flex items-center justify-between bg-secondary/30">
                     <p className="text-sm text-muted-foreground">
                         Page {page} of {totalPages}
                     </p>
@@ -290,13 +290,13 @@ function DiscoveryContent() {
                             type="text"
                             required
                             placeholder="e.g. Fintech Seed Startups"
-                            className="w-full px-4 py-3 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                            className="w-full px-4 py-3 bg-secondary border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                             value={saveSearchName}
                             onChange={(e) => setSaveSearchName(e.target.value)}
                         />
                     </div>
                     <div className="flex flex-col gap-2 pt-2">
-                        <div className="text-xs text-muted-foreground bg-white/5 p-3 rounded-lg border border-white/5">
+                        <div className="text-xs text-muted-foreground bg-secondary p-3 rounded-lg border border-border">
                             <p className="font-bold mb-1 uppercase text-[10px]">Filters to be saved:</p>
                             <p>Query: {search || 'None'}</p>
                             <p>Industry: {industry || 'All'}</p>
@@ -331,9 +331,9 @@ function DiscoveryContent() {
                                         <button
                                             key={list.id}
                                             onClick={() => handleAddToList(list.id)}
-                                            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary/50 hover:bg-primary/10 transition-all text-left flex items-center justify-between group"
+                                            className="w-full px-4 py-3 rounded-xl bg-secondary/50 border border-border hover:border-primary/50 hover:bg-primary/10 transition-all text-left flex items-center justify-between group"
                                         >
-                                            <span className="font-bold">{list.name}</span>
+                                            <span className="font-bold text-foreground">{list.name}</span>
                                             <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors">
                                                 {list._count?.companies || 0} companies
                                             </span>
@@ -369,7 +369,7 @@ function DiscoveryContent() {
                                     required
                                     autoFocus
                                     placeholder="e.g. My Favorites"
-                                    className="w-full px-4 py-3 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                    className="w-full px-4 py-3 bg-secondary border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                                     value={newListName}
                                     onChange={(e) => setNewListName(e.target.value)}
                                 />

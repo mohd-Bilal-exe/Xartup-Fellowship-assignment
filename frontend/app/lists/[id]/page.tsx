@@ -56,7 +56,7 @@ export default function ListDetailPage() {
             <div className="flex items-center justify-between">
                 <button
                     onClick={() => router.back()}
-                    className="flex items-center gap-2 text-muted-foreground hover:text-white transition-colors"
+                    className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     Back to Lists
@@ -71,20 +71,20 @@ export default function ListDetailPage() {
             <div className="glass rounded-3xl border border-border/50 overflow-hidden">
                 <table className="w-full text-left">
                     <thead>
-                        <tr className="border-b border-border/50 bg-white/5">
+                        <tr className="border-b border-border bg-secondary/50">
                             <th className="px-6 py-4 font-medium text-muted-foreground">Company</th>
                             <th className="px-6 py-4 font-medium text-muted-foreground">Industry</th>
                             <th className="px-6 py-4 font-medium text-muted-foreground">Stage</th>
                             <th className="px-6 py-4 font-medium text-muted-foreground text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-border/50">
+                    <tbody className="divide-y divide-border">
                         {list.companies?.length > 0 ? (
                             list.companies.map((company: any) => (
-                                <tr key={company.id} className="hover:bg-white/5 transition-colors group">
+                                <tr key={company.id} className="hover:bg-primary/5 transition-colors group">
                                     <td className="px-6 py-4">
                                         <div className="flex flex-col">
-                                            <span className="font-semibold">{company.name}</span>
+                                            <span className="font-semibold text-foreground">{company.name}</span>
                                             <span className="text-xs text-muted-foreground flex items-center gap-1">
                                                 {company.url} <ExternalLink className="w-3 h-3" />
                                             </span>
@@ -95,7 +95,7 @@ export default function ListDetailPage() {
                                             {company.industry || 'N/A'}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-sm font-medium">{company.stage || 'N/A'}</td>
+                                    <td className="px-6 py-4 text-sm font-medium text-foreground">{company.stage || 'N/A'}</td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
                                             <Link

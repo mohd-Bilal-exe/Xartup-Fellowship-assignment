@@ -17,7 +17,7 @@ import { LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { useSidebar } from './SidebarContext';
-import { useAuth } from './AuthContext';
+import { useAuthStore } from '@/store/useAuthStore';
 
 const menuItems = [
     { name: 'Discovery', icon: Compass, path: '/companies' },
@@ -28,7 +28,7 @@ const menuItems = [
 
 export default function Sidebar() {
     const { isCollapsed, toggle } = useSidebar();
-    const { user, logout } = useAuth();
+    const { user, logout } = useAuthStore();
     const pathname = usePathname();
     const router = useRouter();
 
@@ -38,7 +38,7 @@ export default function Sidebar() {
             animate={{ width: isCollapsed ? '80px' : '260px' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             className={cn(
-                "fixed left-0 top-0 h-screen bg-[#0d0d0d] border-r border-white/5 z-50 flex flex-col"
+                "fixed left-0 top-0 h-screen dark:bg-[#0d0d0d] bg-secondary border-r border-border z-50 flex flex-col"
             )}
         >
             <div className="p-6 flex items-center justify-between">
@@ -46,7 +46,7 @@ export default function Sidebar() {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="flex items-center gap-2 font-bold text-xl tracking-tight text-white"
+                        className="flex items-center gap-2 font-bold text-xl tracking-tight text-foreground"
                     >
                         <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                             <Zap className="w-5 h-5 text-white fill-white" />
@@ -68,7 +68,7 @@ export default function Sidebar() {
                         type="text"
                         placeholder={isCollapsed ? "" : "Global search..."}
                         className={cn(
-                            "w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-9 pr-4 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all",
+                            "w-full bg-background border border-border rounded-xl py-2 pl-9 pr-4 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all",
                             isCollapsed && "cursor-pointer"
                         )}
                         onKeyDown={(e) => {
@@ -90,8 +90,8 @@ export default function Sidebar() {
                             className={cn(
                                 "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 group relative",
                                 isActive
-                                    ? "bg-primary text-white shadow-lg shadow-primary/20"
-                                    : "text-muted-foreground hover:bg-white/5 hover:text-white"
+                                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                                    : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
                             )}
                         >
                             <item.icon className={cn(
@@ -124,7 +124,7 @@ export default function Sidebar() {
                             {user.name?.[0] || user.email?.[0]?.toUpperCase()}
                         </div>
                         <div className="flex flex-col overflow-hidden">
-                            <span className="text-sm font-bold truncate text-white">{user.name || 'User'}</span>
+                            <span className="text-sm font-bold truncate text-foreground">{user.name || 'User'}</span>
                             <span className="text-[10px] text-muted-foreground truncate">{user.email}</span>
                         </div>
                     </div>
@@ -142,7 +142,7 @@ export default function Sidebar() {
 
                 <button
                     onClick={toggle}
-                    className="w-full flex items-center justify-center p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-white transition-colors"
+                    className="w-full flex items-center justify-center p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
                 >
                     {isCollapsed ? <ChevronRight className="w-5 h-5" /> : (
                         <div className="flex items-center gap-2">

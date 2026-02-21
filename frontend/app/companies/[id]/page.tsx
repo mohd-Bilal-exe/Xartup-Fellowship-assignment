@@ -146,7 +146,7 @@ export default function CompanyProfilePage() {
                 <div className="flex flex-col gap-1">
                     <button
                         onClick={() => router.back()}
-                        className="flex items-center gap-2 text-muted-foreground hover:text-white transition-colors text-sm mb-1"
+                        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm mb-1"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         Back to Discovery
@@ -174,7 +174,7 @@ export default function CompanyProfilePage() {
 
                     <button
                         onClick={() => setIsAddToListModalOpen(true)}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold bg-secondary text-white hover:bg-white/10 transition-all border border-white/5"
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold bg-secondary text-foreground hover:bg-primary/10 transition-all border border-border"
                     >
                         <Plus className="w-4 h-4" />
                         Save to List
@@ -197,7 +197,7 @@ export default function CompanyProfilePage() {
                         <div className="space-y-6">
                             <div>
                                 <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">AI Summary</h3>
-                                <p className="text-lg leading-relaxed text-slate-200">
+                                <p className="text-lg leading-relaxed text-foreground/80">
                                     {company.summary || "No AI summary available. Click 'Enrich This Profile' to generate one."}
                                 </p>
                             </div>
@@ -207,7 +207,7 @@ export default function CompanyProfilePage() {
                                     <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">Capabilities</h3>
                                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         {company.description.split('\n').map((bullet: string, i: number) => (
-                                            <li key={i} className="flex items-start gap-2 text-slate-300">
+                                            <li key={i} className="flex items-start gap-2 text-foreground/70">
                                                 <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-1 flex-shrink-0" />
                                                 <span>{bullet.replace(/^- /, '')}</span>
                                             </li>
@@ -227,9 +227,9 @@ export default function CompanyProfilePage() {
                         <div className="space-y-4">
                             {company.signals && company.signals.length > 0 ? (
                                 company.signals.map((signal: any) => (
-                                    <div key={signal.id} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 group hover:border-primary/50 transition-colors">
-                                        <span className="font-medium">{signal.label}</span>
-                                        <span className="text-slate-400 group-hover:text-white transition-colors">{signal.value}</span>
+                                    <div key={signal.id} className="flex items-center justify-between p-4 rounded-xl bg-secondary/50 border border-border group hover:border-primary/50 transition-colors">
+                                        <span className="font-medium text-foreground">{signal.label}</span>
+                                        <span className="text-muted-foreground group-hover:text-primary transition-colors">{signal.value}</span>
                                     </div>
                                 ))
                             ) : (
@@ -289,7 +289,7 @@ export default function CompanyProfilePage() {
                         <div className="space-y-4">
                             {company.notes?.length > 0 ? (
                                 company.notes.map((note: any) => (
-                                    <div key={note.id} className="text-sm p-3 rounded-lg bg-white/5 text-slate-300">
+                                    <div key={note.id} className="text-sm p-3 rounded-lg bg-secondary/50 text-foreground/80 border border-border">
                                         {note.content}
                                     </div>
                                 ))
@@ -362,9 +362,9 @@ export default function CompanyProfilePage() {
                                         <button
                                             key={list.id}
                                             onClick={() => handleAddToList(list.id)}
-                                            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary/50 hover:bg-primary/10 transition-all text-left flex items-center justify-between group"
+                                            className="w-full px-4 py-3 rounded-xl bg-secondary/50 border border-border hover:border-primary/50 hover:bg-primary/10 transition-all text-left flex items-center justify-between group"
                                         >
-                                            <span className="font-bold">{list.name}</span>
+                                            <span className="font-bold text-foreground">{list.name}</span>
                                             <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors">
                                                 {list._count?.companies || 0} companies
                                             </span>
@@ -400,7 +400,7 @@ export default function CompanyProfilePage() {
                                     required
                                     autoFocus
                                     placeholder="e.g. My Favorites"
-                                    className="w-full px-4 py-3 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                    className="w-full px-4 py-3 bg-secondary border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                                     value={newListName}
                                     onChange={(e) => setNewListName(e.target.value)}
                                 />

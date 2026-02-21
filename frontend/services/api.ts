@@ -17,6 +17,7 @@ export const authService = {
   signup: (data: any) => api.post('/auth/signup', data),
   login: (data: any) => api.post('/auth/login', data),
   getMe: () => api.get('/auth/me'),
+  updateMe: (data: any) => api.patch('/auth/me', data),
 };
 
 export const companyService = {

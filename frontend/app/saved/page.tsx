@@ -78,13 +78,13 @@ export default function SavedSearchesPage() {
                     </div>
                 ) : savedSearches.length > 0 ? (
                     savedSearches.map((search) => (
-                        <div key={search.id} className="glass p-5 rounded-2xl border border-border/50 hover:bg-white/[0.02] transition-colors group flex items-center justify-between">
+                        <div key={search.id} className="glass p-5 rounded-2xl border border-border hover:bg-primary/5 transition-colors group flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground">
                                     <History className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold group-hover:text-primary transition-colors">{search.name || search.query || 'Unnamed Search'}</h3>
+                                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">{search.name || search.query || 'Unnamed Search'}</h3>
                                     <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                                         <Filter className="w-3 h-3" />
                                         <span>{typeof search.filters === 'string' ? search.filters : JSON.stringify(search.filters)}</span>
@@ -103,7 +103,7 @@ export default function SavedSearchesPage() {
                                 </button>
                                 <button
                                     onClick={() => runSearch(search)}
-                                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary text-sm font-medium hover:bg-primary hover:text-white transition-all"
+                                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary border border-border text-sm font-medium hover:bg-primary hover:text-white transition-all"
                                 >
                                     Run Search
                                     <ArrowRight className="w-4 h-4" />

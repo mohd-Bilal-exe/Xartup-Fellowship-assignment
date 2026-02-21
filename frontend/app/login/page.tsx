@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/components/AuthContext';
+import { useAuthStore } from '@/store/useAuthStore';
 import { authService } from '@/services/api';
 import { motion } from 'framer-motion';
 import {
@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 export default function LoginPage() {
-    const { login } = useAuth();
+    const { login } = useAuthStore();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -51,7 +51,7 @@ export default function LoginPage() {
                     <p className="text-muted-foreground text-sm">Sign in to continue your fellowship journey.</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="glass p-8 rounded-3xl border border-border/50 space-y-6">
+                <form onSubmit={handleSubmit} className="glass p-8 rounded-3xl border border-border space-y-6">
                     {error && (
                         <div className="p-4 rounded-xl bg-red-300/10 border border-red-300/20 text-red-300 text-sm font-medium">
                             {error}
@@ -67,7 +67,7 @@ export default function LoginPage() {
                                     type="email"
                                     required
                                     placeholder="name@example.com"
-                                    className="w-full pl-10 pr-4 py-3 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground/50"
+                                    className="w-full pl-10 pr-4 py-3 bg-secondary border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground/50"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
@@ -82,7 +82,7 @@ export default function LoginPage() {
                                     type="password"
                                     required
                                     placeholder="••••••••"
-                                    className="w-full pl-10 pr-4 py-3 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground/50"
+                                    className="w-full pl-10 pr-4 py-3 bg-secondary border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground/50"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />

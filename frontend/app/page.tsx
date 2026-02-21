@@ -9,7 +9,6 @@ import {
   Zap,
   Target,
   Layers,
-  Github
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -30,7 +29,7 @@ export default function LandingPage() {
           <span className="text-xl font-bold tracking-tight">Xartup</span>
         </div>
         <div className="flex items-center gap-4">
-          <Link href="/login" className="px-4 py-2 rounded-xl text-muted-foreground hover:text-white transition-colors">
+          <Link href="/login" className="px-4 py-2 rounded-xl text-muted-foreground hover:text-foreground transition-colors">
             Login
           </Link>
           <Link href="/signup" className="px-5 py-2.5 bg-primary text-black rounded-xl font-bold hover:scale-105 transition-all shadow-lg shadow-primary/20">
@@ -86,7 +85,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/login"
-            className="w-full sm:w-auto px-8 py-4 glass border border-border/50 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-white/5 transition-all"
+            className="w-full sm:w-auto px-8 py-4 glass border border-border/50 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-primary/10 transition-all"
           >
             Sign In
           </Link>

@@ -1,17 +1,20 @@
-'use client';
-
-import React from 'react';
+"use client"
+import React, { useEffect } from 'react';
 import Sidebar from "./Sidebar";
 import { SidebarProvider, useSidebar } from "./SidebarContext";
-import { AuthProvider, useAuth } from "./AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { cn } from "@/lib/utils";
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 function MainContent({ children }: { children: React.ReactNode }) {
     const { isCollapsed } = useSidebar();
-    const { user } = useAuth();
+    const { user, loading } = useAuthStore();
     const pathname = usePathname();
     const isPublicPage = ['/', '/login', '/signup'].includes(pathname);
+
+    if (loading) {
+        return null; // or a better loading spinner
+    }
 
     return (
         <main
@@ -31,21 +34,27 @@ function MainContent({ children }: { children: React.ReactNode }) {
 }
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
+    const { checkAuth } = useAuthStore();
+    const pathname = usePathname();
+    const router = useRouter();
+
+    useEffect(() => {
+        checkAuth(pathname, router);
+    }, [pathname]);
+
     return (
-        <AuthProvider>
-            <SidebarProvider>
-                <SidebarWrapper />
-                <MainContent>{children}</MainContent>
-            </SidebarProvider>
-        </AuthProvider>
+        <SidebarProvider>
+            <SidebarWrapper />
+            <MainContent>{children}</MainContent>
+        </SidebarProvider>
     );
 }
 
 function SidebarWrapper() {
-    const { user } = useAuth();
+    const { user, loading } = useAuthStore();
     const pathname = usePathname();
     const isPublicPage = ['/', '/login', '/signup'].includes(pathname);
 
-    if (!user || isPublicPage) return null;
+    if (loading || !user || isPublicPage) return null;
     return <Sidebar />;
 }

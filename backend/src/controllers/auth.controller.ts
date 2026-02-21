@@ -65,3 +65,26 @@ export const getMe = async (req: any, res: Response) => {
     res.status(500).json({ error: error.message });
   }
 };
+export const updateMe = async (req: any, res: Response) => {
+  try {
+    const { name, email } = req.body;
+    
+    // If email is being changed, check if it's already taken
+    if (email) {
+      const existingUser = await prisma.user.findUnique({ where: { email } });
+      if (existingUser && existingUser.id !== req.userId) {
+        return res.status(400).json({ error: 'Email already in use' });
+      }
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: req.userId },
+      data: { name, email },
+      select: { id: true, email: true, name: true }
+    });
+
+    res.json(updatedUser);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};

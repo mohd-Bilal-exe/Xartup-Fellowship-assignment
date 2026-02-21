@@ -111,7 +111,7 @@ export default function ListsPage() {
                     </div>
                 ) : lists.length > 0 ? (
                     lists.map((list) => (
-                        <div key={list.id} className="glass p-6 rounded-3xl border border-border/50 hover:border-primary/50 transition-all group cursor-pointer relative overflow-hidden">
+                        <div key={list.id} className="glass p-6 rounded-3xl border border-border hover:border-primary/50 transition-all group cursor-pointer relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-12 -mt-12 group-hover:bg-primary/10 transition-colors" />
 
                             <div className="flex items-start justify-between mb-8 relative z-10">
@@ -127,7 +127,7 @@ export default function ListsPage() {
                             </div>
 
                             <div className="space-y-1 relative z-10">
-                                <h3 className="text-xl font-bold group-hover:text-primary transition-colors">{list.name}</h3>
+                                <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">{list.name}</h3>
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                     <Building2 className="w-4 h-4" />
                                     <span>{list._count?.companies || 0} companies</span>
@@ -141,7 +141,7 @@ export default function ListsPage() {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={(e) => { e.stopPropagation(); handleExport(list); }}
-                                        className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-white transition-colors"
+                                        className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
                                         title="Export as JSON"
                                     >
                                         <Download className="w-4 h-4" />
@@ -168,20 +168,20 @@ export default function ListsPage() {
                 title="Create New List"
             >
                 <form onSubmit={handleCreateList} className="space-y-4">
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-muted-foreground uppercase">List Name</label>
+                    <div className="space-y-3">
+                        <label className="text-sm font-bold dark:text-white/70 text-black/70 uppercase ">List Name</label>
                         <input
                             type="text"
                             required
                             placeholder="e.g. Fortune 500 Targets"
-                            className="w-full px-4 py-3 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                            className="w-full px-4 py-3 bg-secondary border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                             value={newListName}
                             onChange={(e) => setNewListName(e.target.value)}
                         />
                     </div>
                     <button
                         type="submit"
-                        className="w-full py-4 bg-primary text-black rounded-2xl font-black text-lg flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                        className="w-full py-4 bg-primary text-black rounded-2xl dark:text-white/70 text-black/70 font-black text-lg flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
                     >
                         Create List
                     </button>
@@ -195,7 +195,7 @@ export default function ListsPage() {
                 title="Confirm Deletion"
             >
                 <div className="space-y-6">
-                    <p className="text-muted-foreground">Are you sure you want to delete this list? This action will remove all companies from the collection.</p>
+                    <p className="text-foreground">Are you sure you want to delete this list? This action will remove all companies from the collection.</p>
                     <div className="flex gap-4">
                         <button
                             onClick={() => setDeleteId(null)}
@@ -205,7 +205,7 @@ export default function ListsPage() {
                         </button>
                         <button
                             onClick={handleDeleteList}
-                            className="flex-1 py-3 bg-red-300/5 text-white rounded-xl font-bold hover:bg-red-500/50 transition-all cursor-pointer"
+                            className="flex-1 py-3 bg-red-300/5 dark:text-white/70 text-black/70 rounded-xl font-bold hover:bg-red-500/50 transition-all cursor-pointer"
                         >
                             Delete List
                         </button>

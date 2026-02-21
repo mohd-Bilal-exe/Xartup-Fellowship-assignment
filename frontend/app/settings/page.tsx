@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     User,
     Bell,
@@ -12,16 +12,97 @@ import {
     CreditCard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuthStore } from '@/store/useAuthStore';
+import { authService } from '@/services/api';
+import { Loader2 } from 'lucide-react';
 
 export default function SettingsPage() {
+    const { user, loading, updateUser } = useAuthStore();
     const [darkMode, setDarkMode] = useState(true);
+    const [saving, setSaving] = useState(false);
     const [profile, setProfile] = useState({
-        name: 'Mohd Bilal',
-        email: 'bilal@example.com',
+        name: '',
+        email: '',
         role: 'Venture Analyst',
-        avatar: 'MB'
+        avatar: ''
     });
 
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            setDarkMode(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (user) {
+            setProfile({
+                name: user.name || 'Anonymous User',
+                email: user.email,
+                role: 'Venture Analyst',
+                avatar: (user.name || 'A').split(' ').map((n: string) => n[0]).join('').toUpperCase()
+            });
+        }
+    }, [user]);
+
+    // Handle Dark Mode toggle
+    useEffect(() => {
+        if (darkMode) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+    }, [darkMode]);
+
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            const { data } = await authService.updateMe({
+                name: profile.name,
+                email: profile.email
+            });
+            updateUser(data);
+            alert('Profile updated successfully!');
+        } catch (error: any) {
+            console.error('Failed to update profile:', error);
+            alert(error.response?.data?.error || 'Failed to update profile');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        );
+    }
+
+    const buttons = [
+        {
+            title: "Profile",
+            icon: User,
+            active: true
+        },
+        /*  {
+              title: "Notifications",
+              icon: Bell,
+              active: false
+          },
+          {
+              title: "Security",
+              icon: Lock,
+              active: false
+          },
+          {
+              title: "Billing",
+              icon: CreditCard,
+              active: false
+          }*/
+    ]
     return (
         <div className="max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex flex-col gap-2">
@@ -32,34 +113,29 @@ export default function SettingsPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 {/* Sidebar Nav */}
                 <div className="flex flex-col gap-1">
-                    <button className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-primary/10 text-primary font-medium text-left">
-                        <User className="w-4 h-4" />
-                        Profile
-                    </button>
-                    <button className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-muted-foreground hover:bg-white/5 hover:text-white transition-all text-left">
-                        <Bell className="w-4 h-4" />
-                        Notifications
-                    </button>
-                    <button className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-muted-foreground hover:bg-white/5 hover:text-white transition-all text-left">
-                        <Lock className="w-4 h-4" />
-                        Security
-                    </button>
-                    <button className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-muted-foreground hover:bg-white/5 hover:text-white transition-all text-left">
-                        <CreditCard className="w-4 h-4" />
-                        Billing
-                    </button>
+                    {
+                        buttons.map((button, index) => {
+                            return (
+                                <button key={index} className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-primary/10 text-primary font-medium text-left">
+                                    <button.icon className="w-4 h-4" />
+                                    {button.title}
+                                </button>
+                            )
+                        })
+                    }
+
                 </div>
 
                 {/* Main Content */}
                 <div className="md:col-span-3 space-y-8">
                     {/* Profile Section */}
-                    <section className="glass p-8 rounded-3xl border border-border/50 space-y-8">
+                    <section className="glass p-8 rounded-3xl border border-border space-y-8">
                         <div className="flex items-center gap-6">
                             <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center text-primary text-2xl font-bold border-2 border-primary/50">
                                 {profile.avatar}
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold">{profile.name}</h3>
+                                <h3 className="text-xl font-bold text-foreground">{profile.name}</h3>
                                 <p className="text-muted-foreground">{profile.role}</p>
                                 <button className="mt-2 text-sm text-primary hover:underline">Change Avatar</button>
                             </div>
@@ -72,7 +148,7 @@ export default function SettingsPage() {
                                     type="text"
                                     value={profile.name}
                                     onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                                    className="w-full px-4 py-2.5 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                    className="w-full px-4 py-2.5 bg-secondary border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -81,20 +157,25 @@ export default function SettingsPage() {
                                     type="email"
                                     value={profile.email}
                                     onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                                    className="w-full px-4 py-2.5 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                    className="w-full px-4 py-2.5 bg-secondary border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                                 />
                             </div>
                         </div>
 
                         <div className="flex justify-end">
-                            <button className="px-6 py-2.5 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
-                                Save Changes
+                            <button
+                                onClick={handleSave}
+                                disabled={saving}
+                                className="px-6 py-2.5 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2"
+                            >
+                                {saving && <Loader2 className="w-4 h-4 animate-spin" />}
+                                {saving ? 'Saving...' : 'Save Changes'}
                             </button>
                         </div>
                     </section>
 
                     {/* Preferences */}
-                    <section className="glass p-8 rounded-3xl border border-border/50">
+                    <section className="glass p-8 rounded-3xl border border-border">
                         <h3 className="text-lg font-bold mb-6">App Preferences</h3>
 
                         <div className="space-y-6">
@@ -104,7 +185,7 @@ export default function SettingsPage() {
                                         {darkMode ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
                                     </div>
                                     <div>
-                                        <p className="font-semibold">Dark Mode</p>
+                                        <p className="font-semibold text-foreground">Dark Mode</p>
                                         <p className="text-sm text-muted-foreground">Toggle application theme</p>
                                     </div>
                                 </div>
@@ -122,22 +203,7 @@ export default function SettingsPage() {
                                 </button>
                             </div>
 
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground">
-                                        <Globe className="w-5 h-5" />
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold">Language</p>
-                                        <p className="text-sm text-muted-foreground">System language preference</p>
-                                    </div>
-                                </div>
-                                <select className="bg-secondary border border-border rounded-lg px-3 py-1.5 text-sm outline-none">
-                                    <option>English (US)</option>
-                                    <option>Spanish</option>
-                                    <option>French</option>
-                                </select>
-                            </div>
+
                         </div>
                     </section>
                 </div>
