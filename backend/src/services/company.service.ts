@@ -79,7 +79,7 @@ export const enrichCompany = async (id: string) => {
   // 2. Extract using Gemini
   console.log('Starting Gemini AI extraction...');
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const prompt = `
       Extract information from the following markdown content of a company website.
       Provide the result in valid JSON format with parameters:
@@ -115,11 +115,11 @@ export const enrichCompany = async (id: string) => {
     return prisma.company.update({
       where: { id },
       data: {
-        summary: extractedData.summary,
+        summary: Array.isArray(extractedData.summary) ? extractedData.summary.join(' ') : extractedData.summary,
         description: Array.isArray(extractedData.description) ? extractedData.description.join('\n') : extractedData.description,
-        keywords: extractedData.keywords,
-        industry: extractedData.industry,
-        location: extractedData.location,
+        keywords: Array.isArray(extractedData.keywords) ? extractedData.keywords.join(', ') : extractedData.keywords,
+        industry: Array.isArray(extractedData.industry) ? extractedData.industry.join(', ') : extractedData.industry,
+        location: Array.isArray(extractedData.location) ? extractedData.location.join(', ') : extractedData.location,
         lastEnrichedAt: new Date(),
         sources: {
           create: {

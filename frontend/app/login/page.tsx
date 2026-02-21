@@ -9,23 +9,30 @@ import {
     Mail,
     Lock,
     ArrowRight,
-    Loader2
+    Loader2,
+    Eye,
+    EyeOff
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import AppIcon from '@/components/Appicon';
 
 export default function LoginPage() {
     const { login } = useAuthStore();
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-
+    const [showPassword, setShowPassword] = useState(false);
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setLoading(true);
         try {
+            console.log(email, password);
             const res = await authService.login({ email, password });
             login(res.data.token, res.data.user);
+            router.push('/companies');
         } catch (err: any) {
             setError(err.response?.data?.error || 'Invalid email or password');
         } finally {
@@ -42,9 +49,7 @@ export default function LoginPage() {
             >
                 <div className="text-center space-y-2">
                     <Link href="/" className="inline-flex items-center gap-2 mb-4 group">
-                        <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-black font-bold text-xl transition-transform group-hover:scale-110">
-                            X
-                        </div>
+                        <AppIcon />
                         <span className="text-xl font-bold tracking-tight">Xartup</span>
                     </Link>
                     <h1 className="text-3xl font-black tracking-tighter">Welcome Back</h1>
@@ -79,13 +84,20 @@ export default function LoginPage() {
                             <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     required
                                     placeholder="••••••••"
-                                    className="w-full pl-10 pr-4 py-3 bg-secondary border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground/50"
+                                    className="w-full pl-10 pr-12 py-3 bg-secondary border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground/50"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                                >
+                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
                             </div>
                         </div>
                     </div>

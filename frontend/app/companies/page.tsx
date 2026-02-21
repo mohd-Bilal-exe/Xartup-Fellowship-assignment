@@ -146,7 +146,7 @@ function DiscoveryContent() {
                 </div>
 
                 <select
-                    className="px-4 py-2.5 bg-card border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none"
+                    className="px-2 py-2.5 bg-card border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none"
                     value={industry}
                     onChange={(e) => setIndustry(e.target.value)}
                 >
@@ -159,7 +159,7 @@ function DiscoveryContent() {
                 </select>
 
                 <select
-                    className="px-4 py-2.5 bg-card border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none"
+                    className="px-2 py-2.5 bg-card border border-border text-foreground rounded-xl focus:ring-2 focus:ring-primary/20 outline-none"
                     value={stage}
                     onChange={(e) => setStage(e.target.value)}
                 >

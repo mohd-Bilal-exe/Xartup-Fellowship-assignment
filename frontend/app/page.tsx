@@ -10,6 +10,7 @@ import {
   Target,
   Layers,
 } from 'lucide-react';
+import AppIcon from '@/components/Appicon';
 
 export default function LandingPage() {
   return (
@@ -23,9 +24,7 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full p-6 flex items-center justify-between z-50 bg-background/50 backdrop-blur-md border-b border-border/50">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-black font-bold text-xl">
-            X
-          </div>
+          <AppIcon />
           <span className="text-xl font-bold tracking-tight">Xartup</span>
         </div>
         <div className="flex items-center gap-4">
@@ -39,7 +38,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <div className="relative z-10 text-center max-w-4xl px-6 space-y-8 py-20">
+      <div className="relative z-10 text-center max-w-4xl px-6 space-y-8 py-20 mt-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
